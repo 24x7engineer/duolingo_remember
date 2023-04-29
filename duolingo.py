@@ -3,6 +3,7 @@ import os
 import random
 import json
 import threading
+import time
 
 from rich import print
 import requests
@@ -189,6 +190,7 @@ class Duolingo:
         if os.environ.get("OPENAI_API_KEY"):
             article = call_openai_to_make_article(words_str, language)
             article_trans = call_openai_to_make_trans(article)
+            time.sleep(60)
             # conversation
             conversion = call_openai_to_make_conversation(words_str, language)
             conversion_trans = call_openai_to_make_trans(conversion)
