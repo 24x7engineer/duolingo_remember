@@ -258,7 +258,7 @@ def main(duolingo_user_name, duolingo_jwt, tele_token, tele_chat_id, latest_num)
     except Exception as e:
         print(str(e))
         # default
-        latest_num = 20
+        latest_num = 50
     duolingo = Duolingo(duolingo_user_name, duolingo_jwt, latest_number=latest_num)
     duolingo._make_duolingo_setting()
     _, duolingo_streak, duolingo_today_check = duolingo.get_duolingo_daily()
@@ -330,7 +330,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--tele_chat_id", help="tele_chat_id", nargs="?", default="", const=""
     )
-    parser.add_argument("--latest_number", help="latest_number", default=20)
+    parser.add_argument("--latest_number", help="latest_number", default=50)
     options = parser.parse_args()
     main(
         options.duolingo_user_name,
