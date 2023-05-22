@@ -10,7 +10,7 @@ import requests
 import openai
 import edge_tts
 import asyncio
-from EdgeGPT import Chatbot
+# from EdgeGPT import Chatbot
 
 DUOLINGO_SETTING_URL = "https://www.duolingo.com/api/1/version_info"
 HEADERS = {
@@ -19,7 +19,7 @@ HEADERS = {
 }
 
 PROMPT = "Please write a short story in {language} which is less than 300 words, the story should use simple words and these special words must be included: {words}."
-PROMPT_EDGE_GPT = "Please write a short story in {language} which is less than 300 words, please tell the story only without anything else, the story should use simple words and these special words must be included: {words}."
+PROMPT_= "Please write a short story in {language} which is less than 300 words, please tell the story only without anything else, the story should use simple words and these special words must be included: {words}."
 PROMPT_TRANS = "Translate the given text to {language}. Be faithful or accurate in translation. Make the translation readable or intelligible. Be elegant or natural in translation. If the text cannot be translated, return the original text as is. Do not translate person's name. Do not add any additional text in the translation. The text to be translated is:\n{text}"
 PROMPT_CONVERSATION = "Can you expand these words `{words}` into an {language} conversation that contains these words? The conversation is between two people, male and female, male is A, female is B. Just return the conversation between these two people"
 PROMPT_EDGE_GPT_CONVERSATION = "Can you expand these words `{words}` into an {language} conversation that contains these words? The conversation is between two people, male and female, male is A, female is B. Just return the conversation content between these two people. Please don't translate the conversation or return anything else."
@@ -49,22 +49,22 @@ def call_openai_to_make_conversation(words, language):
     return completion["choices"][0]["message"]["content"].encode("utf8").decode()
 
 
-def call_edge_gpt_to_make_article(words, language):
-    cookies = json.loads(os.environ.get("EDGE_GPT_COOKIE"))
-    bot = Chatbot(cookies=cookies)
-    prompt = PROMPT_EDGE_GPT.format(language=language, words=words)
-    respond = asyncio.run(bot.ask(prompt))["item"]["messages"]
-    respond = next(
-        x
-        for x in respond
-        if x.get("messageType", None) is None and x.get("author") == "bot"
-    )
-    respond = respond["text"].strip("`")
-    if respond.startswith("md\n"):
-        respond = respond[3:]
-    if respond.startswith("markdown:\n"):
-        respond = respond[9:]
-    return respond
+#def call_edge_gpt_to_make_article(words, language):
+#    cookies = json.loads(os.environ.get("EDGE_GPT_COOKIE"))
+#    bot = Chatbot(cookies=cookies)
+#    prompt = PROMPT_.format(language=language, words=words)
+#    respond = asyncio.run(bot.ask(prompt))["item"]["messages"]
+#    respond = next(
+#        x
+#        for x in respond
+#        if x.get("messageType", None) is None and x.get("author") == "bot"
+#    )
+#    respond = respond["text"].strip("`")
+#    if respond.startswith("md\n"):
+#        respond = respond[3:]
+#    if respond.startswith("markdown:\n"):
+#        respond = respond[9:]
+#    return respond
 
 
 def call_openai_to_make_trans(text, language="Simplified Chinese"):
@@ -76,33 +76,33 @@ def call_openai_to_make_trans(text, language="Simplified Chinese"):
     return completion["choices"][0]["message"]["content"].encode("utf8").decode()
 
 
-def call_edge_gpt_to_make_trans(text, language="Simplified Chinese"):
-    cookies = json.loads(os.environ.get("EDGE_GPT_COOKIE"))
-    bot = Chatbot(cookies=cookies)
-    prompt = PROMPT_TRANS.format(text=text, language=language)
-    respond = asyncio.run(bot.ask(prompt))["item"]["messages"]
-    respond = next(
-        x
-        for x in respond
-        if x.get("messageType", None) is None and x.get("author") == "bot"
-    )
-    return respond["text"]
+#def call_edge_gpt_to_make_trans(text, language="Simplified Chinese"):
+#    cookies = json.loads(os.environ.get("EDGE_GPT_COOKIE"))
+#    bot = Chatbot(cookies=cookies)
+#    prompt = PROMPT_TRANS.format(text=text, language=language)
+#    respond = asyncio.run(bot.ask(prompt))["item"]["messages"]
+#    respond = next(
+#        x
+#        for x in respond
+#        if x.get("messageType", None) is None and x.get("author") == "bot"
+#    )
+#    return respond["text"]
 
 
-def call_edge_gpt_to_make_conversation(words, language):
-    cookies = json.loads(os.environ.get("EDGE_GPT_COOKIE"))
-    bot = Chatbot(cookies=cookies)
-    prompt = PROMPT_EDGE_GPT_CONVERSATION.format(words=words, language=language)
-    respond = asyncio.run(bot.ask(prompt))["item"]["messages"]
-    respond = next(
-        x
-        for x in respond
-        if x.get("messageType", None) is None and x.get("author") == "bot"
-    )
-    respond = respond["text"]
-    respond = respond[respond.find("A:") :]
-    respond = respond.strip("`")
-    return respond
+#def call_edge_gpt_to_make_conversation(words, language):
+#    cookies = json.loads(os.environ.get("EDGE_GPT_COOKIE"))
+#    bot = Chatbot(cookies=cookies)
+#    prompt = PROMPT_EDGE_GPT_CONVERSATION.format(words=words, language=language)
+#    respond = asyncio.run(bot.ask(prompt))["item"]["messages"]
+#    respond = next(
+#        x
+#        for x in respond
+#        if x.get("messageType", None) is None and x.get("author") == "bot"
+#    )
+#    respond = respond["text"]
+#    respond = respond[respond.find("A:") :]
+#    respond = respond.strip("`")
+#    return respond
 
 
 class Duolingo:
@@ -195,11 +195,11 @@ class Duolingo:
             conversion = call_openai_to_make_conversation(words_str, language)
             conversion_trans = call_openai_to_make_trans(conversion)
 
-        elif os.environ.get("EDGE_GPT_COOKIE"):
-            article = call_edge_gpt_to_make_article(words_str, language)
-            article_trans = call_edge_gpt_to_make_trans(article)
-            conversion = call_edge_gpt_to_make_conversation(words_str, language)
-            conversion_trans = call_edge_gpt_to_make_trans(conversion)
+#        elif os.environ.get("EDGE_GPT_COOKIE"):
+#            article = call_edge_gpt_to_make_article(words_str, language)
+#            article_trans = call_edge_gpt_to_make_trans(article)
+#            conversion = call_edge_gpt_to_make_conversation(words_str, language)
+#            conversion_trans = call_edge_gpt_to_make_trans(conversion)
         else:
             raise Exception("Please provide OPENAI_API_KEY or EDGE_GPT_COOKIE in env")
 
